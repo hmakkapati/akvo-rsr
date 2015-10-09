@@ -9,12 +9,11 @@ see < http://www.gnu.org/licenses/agpl.html >.
 
 from django.shortcuts import get_object_or_404, render
 
-from ..filters import (build_choices, location_choices, OrganisationFilter,
-                       remove_empty_querydict_items)
-# from ..filters import remove_empty_querydict_items, OrganisationFilter
+from ..filters import location_choices, OrganisationFilter, remove_empty_querydict_items
 from ..models import Organisation, Project
 from ...utils import pagination, filter_query_string
 from .utils import apply_keywords, org_projects, show_filter_class
+from ..decorators import disallowed_for_akvo_iati
 
 ###############################################################################
 # Organisation directory
@@ -54,6 +53,7 @@ def _organisation_directory_coll(request):
     return _page_organisations(page)
 
 
+@disallowed_for_akvo_iati
 def directory(request):
     """The Organisation list view."""
     qs = remove_empty_querydict_items(request.GET)
@@ -98,6 +98,7 @@ def directory(request):
 ###############################################################################
 
 
+@disallowed_for_akvo_iati
 def main(request, organisation_id):
     """The organisation main view."""
     return render(request, 'organisation_main.html', {

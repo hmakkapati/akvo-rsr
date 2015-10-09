@@ -9,7 +9,7 @@ For additional details on the GNU license please see < http://www.gnu.org/licens
 import urllib
 from urlparse import urljoin
 
-from akvo.rsr.decorators import fetch_project
+from akvo.rsr.decorators import disallowed_for_akvo_iati, fetch_project
 from akvo.rsr.forms import InvoiceForm
 from akvo.rsr.models import Invoice
 
@@ -55,6 +55,7 @@ def render_to(template):
     return renderer
 
 
+@disallowed_for_akvo_iati
 @fetch_project
 @render_to("donate/donate_step1.html")
 def setup_donation(request, p):
@@ -65,6 +66,7 @@ def setup_donation(request, p):
     return dict(project=p)
 
 
+@disallowed_for_akvo_iati
 @fetch_project
 def donate(request, p, engine):
     if not can_accept_donations(p):
@@ -184,6 +186,7 @@ def void_invoice(request, invoice_id, action=None):
     return redirect("project-directory")
 
 
+@disallowed_for_akvo_iati
 def mollie_report(request, mollie_response=None):
     transaction_id = request.GET.get("transaction_id", None)
     if transaction_id:
@@ -203,6 +206,7 @@ def mollie_report(request, mollie_response=None):
     return HttpResponse("OK")
 
 
+@disallowed_for_akvo_iati
 def donate_thanks(request,
                   invoice=None,
                   template="donate/donate_thanks.html"):

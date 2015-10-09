@@ -55,6 +55,7 @@
             <tr>
           {% endif %}
             <td class="media">
+              {% if not akvo_iati %}
               <a class="pull-left" href="{% url 'project-main' project.id %}">
                 {% img project 64 64 project.title %}
               </a>
@@ -64,6 +65,9 @@
                 </a>
                 <p class="small">{{ project.subtitle }}</p>
               </div>
+              {% else %}
+                <h4 class="media-heading">{% if project.title %}{{ project.title }}{% else %}&lt;{% trans 'Untitled project' %}&gt;{% endif %}</h4>
+              {% endif %}
             </td>
             <td>{% bootstrap_icon "globe" %} {% if project.primary_location.country %}{{ project.primary_location.country }}, {{ project.primary_location.country.continent }}{% else %}{% trans 'Location unknown' %}{% endif %}</td>
             <td>{{ project.show_status }}</td>
@@ -73,12 +77,13 @@
                 {% if can_edit_project %}
                   <a href="{% url 'project_editor' project.pk %}">{% trans 'Edit' %}</a>
                 {% endif %}
-                {% if project.is_published %}
-                  {% has_perm 'rsr.post_updates' project as can_add_update %}
-                  <a href="{% url 'add-update' project.pk %}">{% trans 'Update' %}</a>
-                {% else %}
-                  <a class="addUpdate disabled" title="{% trans "Can't update an unpublished project" %}">{% trans 'Update' %}</a>
-                {% endif %}                
+                {% if not akvo_iati %}
+                  {% if project.is_published %}
+                    <a href="{% url 'add-update' project.pk %}">{% trans 'Update' %}</a>
+                  {% else %}
+                    <a class="addUpdate disabled" title="{% trans "Can't update an unpublished project" %}">{% trans 'Update' %}</a>
+                  {% endif %}
+                {% endif %}
               </div>
             </td>
           </tr>

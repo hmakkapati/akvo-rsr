@@ -26,6 +26,8 @@
           {% img rsr_page 125 60 organisation.name %}
         {% elif rsr_page.organisation %}
           {% img rsr_page.organisation 125 60 rsr_page.organisation.name %}
+        {% elif akvo_iati %}
+          <img src="{{ STATIC_URL }}/images/akvoIatiLogo.png" height="50" />
         {% else %}
           <h1>Akvo RSR</h1> {# Text is just a placeholder, svg from css #}
         {% endif %}
@@ -34,6 +36,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar-collapsed">
+      {% if not akvo_iati %}
       <ul class="nav navbar-nav">
         <li class="navProject">
           <a class="{% if current_path == project_path %}active{% endif %}"
@@ -54,9 +57,10 @@
           </a>
         </li>
       </ul>
+      {% endif %}
 
       <ul class="nav navbar-nav navbar-right">
-        {% if not '/myrsr/projects/' in request.get_full_path %}
+        {% if not '/myrsr/projects/' in request.get_full_path and not akvo_iati %}
         <li>
             <a href="{% if project and project.publishingstatus.status == "published" %}{% url 'add-update' project.pk %}{% else %}{% url 'my_projects' %}{% endif %}"
                class="btn btn-primary btn-xs navbar-btn addUpdateBtn">

@@ -18,6 +18,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 
+from ..decorators import disallowed_for_akvo_iati
 from ..forms import ProjectUpdateForm
 from ..filters import (build_choices, location_choices, ProjectFilter,
                        remove_empty_querydict_items)
@@ -66,6 +67,7 @@ def _project_directory_coll(request):
     return _page_projects(page)
 
 
+@disallowed_for_akvo_iati
 def directory(request):
     """The project list view."""
     qs = remove_empty_querydict_items(request.GET)
@@ -300,6 +302,7 @@ def _get_project_partners(project):
     return partners
 
 
+@disallowed_for_akvo_iati
 def main(request, project_id):
     """."""
     project = get_object_or_404(Project, pk=project_id)
@@ -338,6 +341,7 @@ def main(request, project_id):
 ###############################################################################
 
 
+@disallowed_for_akvo_iati
 def hierarchy(request, project_id):
     """."""
     project = get_object_or_404(Project, pk=project_id)
@@ -364,6 +368,7 @@ def hierarchy(request, project_id):
 ###############################################################################
 
 
+@disallowed_for_akvo_iati
 def report(request, project_id):
     """."""
     project = get_object_or_404(Project, pk=project_id)
@@ -395,6 +400,7 @@ def iati(request, project_id):
 ###############################################################################
 
 
+@disallowed_for_akvo_iati
 def widgets(request, project_id):
     """."""
     project = get_object_or_404(Project, pk=project_id)
@@ -418,6 +424,7 @@ def widgets(request, project_id):
         return render(request, 'project_widgets.html', context)
 
 
+@disallowed_for_akvo_iati
 @login_required()
 def set_update(request, project_id, edit_mode=False, form_class=ProjectUpdateForm, update_id=None):
     """."""
@@ -466,12 +473,14 @@ def set_update(request, project_id, edit_mode=False, form_class=ProjectUpdateFor
     return render(request, 'update_add.html', context)
 
 
+@disallowed_for_akvo_iati
 def search(request):
     """."""
     context = {'projects': Project.objects.published()}
     return render(request, 'project_search.html', context)
 
 
+@disallowed_for_akvo_iati
 def partners(request, project_id):
     """."""
     project = get_object_or_404(Project, pk=project_id)
@@ -488,6 +497,7 @@ def partners(request, project_id):
     return render(request, 'project_partners.html', context)
 
 
+@disallowed_for_akvo_iati
 def finance(request, project_id):
     """."""
     project = get_object_or_404(Project, pk=project_id)
@@ -499,11 +509,13 @@ def finance(request, project_id):
     return render(request, 'project_finance.html', context)
 
 
+@disallowed_for_akvo_iati
 def donations_disabled(project):
     """."""
     return not project.donate_button
 
 
+@disallowed_for_akvo_iati
 def can_accept_donations(project):
     """."""
     if project in Project.objects.active() and project.funds_needed > 0:
@@ -512,6 +524,7 @@ def can_accept_donations(project):
         return False
 
 
+@disallowed_for_akvo_iati
 def donate(request, project_id):
     """."""
     project = get_object_or_404(Project, pk=project_id)

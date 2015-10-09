@@ -23,6 +23,7 @@ from ..filters import remove_empty_querydict_items
 from ...utils import pagination, filter_query_string
 from ..models import (Country, Organisation, Employment, Keyword, Project, BudgetItemLabel,
                       OrganisationCustomField)
+from ..decorators import disallowed_for_akvo_iati
 
 from akvo.codelists.models import (
     ActivityScope, AidType, BudgetIdentifier, BudgetIdentifierVocabulary, BudgetType,
@@ -84,6 +85,7 @@ def password_change(request):
                               context_instance=context)
 
 
+@disallowed_for_akvo_iati
 @login_required
 def my_updates(request):
     """Directory of Updates connected to the user."""
@@ -157,6 +159,7 @@ def my_projects(request):
         'reportable_organisations': reportable_organisations
     }
     return render(request, 'myrsr/my_projects.html', context)
+
 
 @login_required
 def project_editor(request, project_id):
@@ -310,7 +313,8 @@ def project_editor(request, project_id):
     }
 
     return render(request, 'myrsr/project_editor.html', context)
-    
+
+
 @login_required
 def my_iati(request):
     """IATI reports."""

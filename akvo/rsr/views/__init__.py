@@ -9,7 +9,10 @@ For additional details on the GNU license please see < http://www.gnu.org/licens
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from ..decorators import disallowed_for_akvo_iati
 
+
+@disallowed_for_akvo_iati
 def index(request):
-    """."""
-    return HttpResponseRedirect(reverse('project-directory', args=[]))
+    """The index of RSR."""
+    return HttpResponseRedirect(reverse('project-directory'))

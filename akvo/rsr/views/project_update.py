@@ -11,6 +11,7 @@ import django_filters
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext_lazy as _
 
+from ..decorators import disallowed_for_akvo_iati
 from ..filters import (build_choices, location_choices, ProjectUpdateFilter,
                        remove_empty_querydict_items)
 from ..models import ProjectUpdate, Project
@@ -49,6 +50,7 @@ def _update_directory_coll(request):
     return _page_updates(page)
 
 
+@disallowed_for_akvo_iati
 def directory(request):
     """The projectupdate list view."""
     qs = remove_empty_querydict_items(request.GET)
@@ -88,6 +90,7 @@ def directory(request):
     })
 
 
+@disallowed_for_akvo_iati
 def main(request, project_id, update_id):
     """The projectupdate main view."""
     project = get_object_or_404(Project, pk=project_id)
@@ -103,6 +106,7 @@ def main(request, project_id, update_id):
     return render(request, 'update_main.html', context)
 
 
+@disallowed_for_akvo_iati
 def project_updates(request, project_id):
     """The list of updates for a single project."""
     project = get_object_or_404(Project, pk=project_id)

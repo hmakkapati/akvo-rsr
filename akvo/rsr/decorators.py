@@ -10,7 +10,8 @@ from __future__ import absolute_import
 from functools import wraps
 
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
 from akvo.rsr.models import Project
@@ -66,4 +67,16 @@ def project_viewing_permissions(view):
 
         kwargs.update(draft=draft, can_add_update=privileged_user)
         return view(request, project=project, *args, **kwargs)
+    return wrapper
+
+
+def disallowed_for_akvo_iati(view):
+    """
+    Add this decorator for every view that should not be accessible in Akvo IATI.
+    """
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        myrsr_view = HttpResponseRedirect(reverse('my_details'))
+        original_view = view(request, *args, **kwargs)
+        return myrsr_view if request.akvo_iati else original_view
     return wrapper

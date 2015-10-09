@@ -13,6 +13,7 @@ from lxml import etree
 from tastypie.models import ApiKey
 
 from akvo.rsr.forms import RegisterForm
+from ..decorators import disallowed_for_akvo_iati
 
 from django.conf import settings
 from django.contrib.auth import login, logout, authenticate
@@ -119,6 +120,7 @@ def sign_out(request):
     return redirect('index')
 
 
+@disallowed_for_akvo_iati
 def api_key_xml_response(user, orgs):
     """Build the XML response.
 
@@ -150,7 +152,7 @@ def api_key_xml_response(user, orgs):
 
     return etree.tostring(etree.ElementTree(xml_root))
 
-
+@disallowed_for_akvo_iati
 @require_POST
 @csrf_exempt
 def api_key(request):
