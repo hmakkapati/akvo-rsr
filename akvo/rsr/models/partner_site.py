@@ -7,6 +7,7 @@ For additional details on the GNU license please see < http://www.gnu.org/licens
 """
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -160,6 +161,12 @@ class PartnerSite(TimestampsMixin, models.Model):
     def __unicode__(self):
         """Unicode representation."""
         return _(u'Akvo page for {}').format(self.organisation.name)
+
+    def clean(self):
+        """The 'iati' hostname is not allowed, since it could cause confusion with Akvo IATI."""
+        if self.hostname.lower() == 'iati':
+            raise ValidationError({'hostname': _(u'It is not allowed to have \'iati\' as '
+                                                 u'hostname')})
 
     @property
     def logo(self):
