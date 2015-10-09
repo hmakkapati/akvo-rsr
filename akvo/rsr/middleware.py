@@ -21,15 +21,17 @@ from django.http import HttpResponseRedirect
 
 def _is_rsr_host(hostname):
     """Predicate function that checks if request is made to the RSR_DOMAIN."""
-    rsr_hosts = ['127.0.0.1', 'localhost', settings.RSR_DOMAIN]
-    return hostname in rsr_hosts
+    return hostname in ['127.0.0.1', 'localhost', settings.RSR_DOMAIN]
+
+
+def _is_iati_host(hostname):
+    """Predicate function that checks if request is made to the IATI_DOMAIN."""
+    return hostname in ['iati.localakvoapp.org', settings.IATI_DOMAIN]
 
 
 def _is_naked_app_host(hostname):
     """Predicate function that checks if request is made to the RSR_DOMAIN."""
-    if hostname == settings.AKVOAPP_DOMAIN:
-        return True
-    return False
+    return hostname == settings.AKVOAPP_DOMAIN
 
 
 def _partner_site(netloc):
@@ -93,23 +95,23 @@ class DefaultLanguageMiddleware(object):
 
 
 class HostDispatchMiddleware(object):
-
     """RSR page dispath middleware."""
 
-    # def process_request(self, request, cname_domain=False, rsr_page=None):
     def process_request(self, request):
         """Route on request."""
         request.rsr_page = None
+        request.akvo_iati = False
         host = request.get_host()
 
-        # Make sure host is valid - otherwise redirect to RSR_DOMAIN.
         # Do nothing if called on "normal" RSR host.
-        try:
-            if _is_rsr_host(host):
-                return None
-        except DisallowedHost:
-            return redirect("http://{}".format(settings.RSR_DOMAIN))
+        if _is_rsr_host(host):
+            return None
 
+        if _is_iati_host(host):
+            request.akvo_iati = True
+            return None
+
+        # Make sure host is valid - otherwise redirect to RSR_DOMAIN.
         # Check if called on naked app domain - if so redirect
         if _is_naked_app_host(host):
             return redirect("http://{}".format(settings.RSR_DOMAIN))

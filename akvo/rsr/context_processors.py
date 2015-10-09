@@ -28,6 +28,7 @@ def extra_context(request, protocol="http"):
     deploy_commit_full_id = getattr(settings, 'DEPLOY_COMMIT_FULL_ID', 'Unknown')
 
     return dict(
+        akvo_iati=request.akvo_iati,
         current_site=current_site,
         django_version=django_version,
         deploy_tag=deploy_tag,
