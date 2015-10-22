@@ -49,6 +49,11 @@ class RegisterForm(forms.Form):
             attrs={'placeholder': _(u'Last name')}
         ),
     )
+    # sign-up spam catcher, this field is hidden using CSS, so only bots will fill it in
+    siren = forms.CharField(
+        max_length=50,
+        required=False
+    )
     password1 = forms.CharField(
         label=_(u'Password'),
         widget=forms.PasswordInput(
@@ -96,6 +101,9 @@ class RegisterForm(forms.Form):
         a profile callback (see the documentation on create_inactive_user() for details)
         if supplied. Modified to set user.is_active = False and add User object creation.
         """
+        # spam registration check, if this field holds data then a bot filled in the form
+        if self.cleaned_data['siren']:
+            return
         site = get_current_site(request)
         new_user = RegistrationProfile.objects.create_inactive_user(
             username=self.cleaned_data['email'],
@@ -105,6 +113,7 @@ class RegisterForm(forms.Form):
         )
         new_user.first_name = self.cleaned_data['first_name']
         new_user.last_name = self.cleaned_data['last_name']
+        # TODO: remove, redundant
         new_user.is_active = False
         new_user.save()
         return new_user

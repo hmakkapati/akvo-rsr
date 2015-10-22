@@ -2071,3 +2071,7 @@ div.active .addOrg {
           margin-right: 1em; }
         .modalContainer .orgModal .controls button.modal-save {
           margin-right: 1.5em; }
+
+/* MyRSR registration page, spam registration honeypot field */
+div.siren {
+  display: none; }
