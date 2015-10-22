@@ -17,9 +17,20 @@
 		<h1>{% trans 'Welcome to Akvo RSR!' %}</h1>
 		<h2><small>{% trans 'Your account has been activated, please visit the MyRSR page.' %}</small></h2>
 	{% else %}
-		<h1>{% trans "We're sorry, the account activation failed" %}</h1>
-		<h2><small>{% blocktrans with expiration_days as exp_days %}Either your activation link was incorrect, or the activation key for your account has expired. Activation keys are only valid for {{ exp_days }} days after registration.{% endblocktrans %}</small></h2>
-	    <h2><small>{% blocktrans with support_email='support@akvo.org' %}Please <a href='mailto:{{support_email}}'>contact us</a> if you have any questions.</small></h2>{% endblocktrans %}
+		<h1>{% trans "This account has already been activated or the activation has failed" %}</h1>
+		<h2><small>{% blocktrans with expiration_days as exp_days %}
+      Either your activation link has already been used and your account is activated, the link was
+      incorrect, or the activation key for your account has expired.
+      Activation keys are only valid for {{ exp_days }} days after registration.
+    {% endblocktrans %}</small></h2>
+    {% url 'sign_in' as sign_in %}
+		<h2><small>{% blocktrans %}
+      If you think your account has been activated, please <a href="{{ sign_in }}">click here to
+      sign in</a>.
+    {% endblocktrans %}</small></h2>
+	    <h2><small>{% blocktrans with support_email='support@akvo.org' %}
+        Please <a href='mailto:{{support_email}}'>contact us</a> if you have any questions.
+      </small></h2>{% endblocktrans %}
 	{% endif %}
     </div>
 </div>
