@@ -64,15 +64,12 @@ def activate(request, activation_key, extra_context=None):
             user = False
         else:
             if not registration_profile.activation_key_expired():
-                registration_profile.activation_key = RegistrationProfile.ACTIVATED
-                registration_profile.save()
-                user = registration_profile.user
-                user.is_active = True
-                user.save()
-
-                # Log in user without password, using custom backend
-                user = authenticate(username=user.username, no_password=True)
-                login(request, user)
+                user = RegistrationProfile.objects.activate_user(activation_key)
+                if user:
+                    # Log in user without password, using custom backend
+                    user = authenticate(username=user.username, no_password=True)
+                    login(request, user)
+                    return redirect('my_details')
     if extra_context is None:
         extra_context = {}
     context = RequestContext(request)
