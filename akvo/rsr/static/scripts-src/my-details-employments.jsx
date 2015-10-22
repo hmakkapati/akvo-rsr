@@ -70,10 +70,14 @@ EmploymentList = React.createClass({
     var employments = this.props.employments.map(function(job) {
       return <Employment key={job.organisation_full.id} employment={job} />;
     });
-
-    return (
-      <ul>{employments}</ul>
-    );
+    var ulStyle = {
+      color: 'red'
+    };
+    if (employments.length  > 0) {
+      return React.DOM.ul(null, employments);
+    } else {
+      return React.DOM.ul( {style:ulStyle}, i18n.connect_to_employer);
+    }
   }
 });
 
